@@ -1,0 +1,346 @@
+<!DOCTYPE html><html lang="en" dir="ltr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>WebLinux OS</title>
+<style>
+:root{--sf:#eff0f1;--fg:#232629;--win:#fcfcfc;--bd:#bdc3c7;--mut:#6b7075;--ac:#3daee9;--ph:48px;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--sf:#31363b;--fg:#eff0f1;--win:#232629;--bd:#4d4d4d;--mut:#9aa0a6}}
+:root[data-theme="dark"]{--sf:#31363b;--fg:#eff0f1;--win:#232629;--bd:#4d4d4d;--mut:#9aa0a6}
+*{box-sizing:inherit}html,body{height:100%;margin:0}
+html{background:var(--wp,#1d3557);color:var(--fg);font:14px/1.4 "Noto Sans",system-ui,sans-serif;overflow:hidden;-webkit-tap-highlight-color:transparent}
+button,input,textarea{font:inherit;color:inherit}
+button{background:var(--sf);border:1px solid var(--bd);border-radius:6px;min-height:34px;padding:0 10px;cursor:pointer}
+button:hover{border-color:var(--ac)}button.pri,button.on{background:var(--ac);color:#fff;border-color:var(--ac)}button:disabled{opacity:.45;cursor:default}
+:focus-visible{outline:2px solid var(--ac);outline-offset:1px}
+input,textarea{background:var(--win);border:1px solid var(--bd);border-radius:6px;padding:6px 8px;min-width:0}
+#desk{position:fixed;left:0;right:0;top:env(safe-area-inset-top,0px);bottom:calc(var(--ph) + env(safe-area-inset-bottom,0px));overflow:hidden}
+#icons{position:absolute;left:6px;top:8px;bottom:8px;display:flex;flex-direction:column;flex-wrap:wrap;align-content:flex-start;gap:4px}#icons.off{display:none}
+.di{width:78px;min-height:0;padding:6px 2px;background:none;border:1px solid transparent;color:#fff;text-shadow:0 1px 3px #000;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:12px}
+.di.sel{background:rgba(61,174,233,.3);border-color:var(--ac)}
+.ic{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;font-size:24px;box-shadow:0 2px 6px rgba(0,0,0,.35)}
+.w{position:absolute;display:flex;flex-direction:column;background:var(--win);border:1px solid var(--bd);border-radius:8px;box-shadow:0 10px 30px rgba(0,0,0,.4);overflow:hidden;resize:both;min-width:240px;min-height:150px;max-width:100%;max-height:100%}
+.w.max{inset:0;width:auto!important;height:auto!important;left:0!important;top:0!important;border-radius:0;resize:none;border:0}.w.min{display:none}
+.tb{display:flex;align-items:center;gap:2px;padding:0 4px 0 10px;height:38px;background:var(--sf);touch-action:none;user-select:none;flex:none}
+.tb b{flex:1;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tb button{width:34px;padding:0;border:0;background:none;font-size:16px}.tb button:hover{background:rgba(127,127,127,.25)}.tb .x:hover{background:#da4453;color:#fff}
+.act .tb{box-shadow:inset 0 -2px var(--ac)}.wb{flex:1;min-height:0;display:flex;flex-direction:column;overflow:hidden}
+#pnl{position:fixed;left:0;right:0;bottom:0;height:calc(var(--ph) + env(safe-area-inset-bottom,0px));padding:0 6px env(safe-area-inset-bottom,0px);display:flex;align-items:center;gap:4px;background:rgba(27,30,32,.88);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border-top:1px solid rgba(255,255,255,.1);color:#eff0f1;direction:ltr;z-index:100000}
+#pnl button{background:none;border:0;color:inherit}
+.pb{width:44px;height:40px;display:grid;place-items:center;position:relative;border-radius:8px;padding:0;font-size:18px}.pb:hover{background:rgba(255,255,255,.12)}
+.pb .ic{width:30px;height:30px;font-size:17px;border-radius:8px}
+.pb.run::after{content:"";position:absolute;bottom:2px;width:14px;height:3px;border-radius:2px;background:#8a9097}.pb.act::after{background:var(--ac);width:22px}.pb.mn .ic{opacity:.45}
+#mid{flex:1;display:flex;justify-content:center;gap:2px;overflow-x:auto;min-width:0}#tray{display:flex;align-items:center;gap:2px}
+#clk{text-align:center;line-height:1.15;font-size:12px;padding:0 8px;white-space:nowrap}#clk b{display:block;font-size:13px}
+.bd{position:absolute;top:2px;right:2px;min-width:15px;height:15px;border-radius:8px;background:#da4453;font-size:10px;line-height:15px;color:#fff}
+#pop{position:fixed;bottom:calc(var(--ph) + env(safe-area-inset-bottom,0px) + 6px);width:min(340px,calc(100% - 12px));max-height:calc(100% - var(--ph) - 90px);overflow:auto;background:var(--win);color:var(--fg);border:1px solid var(--bd);border-radius:10px;box-shadow:0 10px 30px rgba(0,0,0,.45);padding:8px;z-index:100001}
+#pop.L{left:6px}#pop.R{right:6px}#pop[hidden]{display:none}
+.row{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.li{display:flex;align-items:center;gap:10px;width:100%;min-height:40px;text-align:start;border:0;background:none;border-radius:6px;padding:4px 6px}.li:hover{background:rgba(61,174,233,.22)}
+.li .ic{width:28px;height:28px;font-size:15px;border-radius:8px;flex:none;box-shadow:none}
+h4{margin:8px 4px 2px;font-size:12px;color:var(--mut);font-weight:600}
+#toast{position:fixed;bottom:calc(var(--ph) + env(safe-area-inset-bottom,0px) + 8px);right:8px;display:grid;gap:6px;z-index:100003;pointer-events:none}
+#toast div{background:var(--win);color:var(--fg);border:1px solid var(--bd);border-left:3px solid var(--ac);padding:8px 12px;border-radius:8px;box-shadow:0 6px 20px rgba(0,0,0,.4);max-width:min(320px,calc(100vw - 16px))}
+.mod{position:fixed;inset:0;background:rgba(0,0,0,.45);display:grid;place-items:center;z-index:100005;padding:12px}
+.dlg{background:var(--win);color:var(--fg);border:1px solid var(--bd);border-radius:10px;padding:14px;width:min(420px,100%);display:grid;gap:10px}.dlg p{margin:0;white-space:pre-wrap}.dlg .row{justify-content:flex-end}
+.bar{display:flex;gap:6px;padding:6px;flex-wrap:wrap;align-items:center;border-bottom:1px solid var(--bd);flex:none}
+.list{flex:1;overflow:auto}.fi{display:flex;gap:10px;align-items:center;padding:6px 10px;min-height:38px;border-bottom:1px solid rgba(127,127,127,.15)}.fi.sel{background:rgba(61,174,233,.25)}
+.fi span:nth-child(2){flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.fi small{color:var(--mut)}
+.ed{flex:1;resize:none;border:0;border-radius:0;font:13px/1.5 ui-monospace,Menlo,Consolas,monospace;tab-size:2;min-height:0}
+.tm{flex:1;overflow:auto;background:#1b1e20;color:#e6e6e6;font:13px/1.45 ui-monospace,Menlo,Consolas,monospace;padding:8px;white-space:pre-wrap;overflow-wrap:anywhere;direction:ltr;text-align:left}
+.tm input{background:none;border:0;color:inherit;font:inherit;width:100%;padding:0;outline:0}
+.pg{padding:12px;overflow:auto;display:grid;gap:14px;align-content:start}.pg p{margin:0;color:var(--mut);flex-basis:100%}
+.sw{width:34px;height:34px;border-radius:50%;padding:0;border:2px solid transparent}.sw.on{border-color:var(--fg)}
+@media(prefers-reduced-motion:no-preference){.w{animation:pp .12s ease-out}@keyframes pp{from{transform:scale(.96);opacity:0}}}
+.cd{container-type:inline-size;flex:1;min-height:0;display:flex;flex-direction:column;position:relative;direction:ltr;text-align:left;outline:0;background:var(--cb);color:var(--cf);--cb:#1e1e1e;--cf:#d4d4d4;--sg:#252526;--bg:#333;--gn:#858585;--tc:#6a9955;--ts:#ce9178;--tn:#b5cea8;--tk:#569cd6;--tf:#dcdcaa}
+:root[data-theme="light"] .cd{--cb:#fff;--cf:#1f1f1f;--sg:#f3f3f3;--bg:#e4e4e4;--gn:#237893;--tc:#008000;--ts:#a31515;--tn:#098658;--tk:#0000ff;--tf:#795e26}
+.cd button{background:none;border:0;color:inherit;min-height:32px;border-radius:4px}.cd button:hover{background:rgba(127,127,127,.25)}
+.cm{flex:1;display:flex;min-height:0;position:relative}.ab{width:44px;background:var(--bg);display:flex;flex-direction:column;align-items:center;flex:none}.ab button{width:44px;height:44px;font-size:18px}
+.sb{width:180px;background:var(--sg);display:flex;flex-direction:column;flex:none;overflow:hidden}.sb[hidden],.tp[hidden],.pv[hidden]{display:none}.sb .bar{border:0;padding:2px 4px}
+.tr{flex:1;overflow:auto}.tr h4{margin:6px 8px;text-transform:uppercase;overflow:hidden;text-overflow:ellipsis}.tn{display:block;width:100%;text-align:left;font-size:13px;white-space:nowrap}.cd .tn.on{background:rgba(127,127,127,.3)}
+.ma{flex:1;min-width:0;display:flex;flex-direction:column;position:relative}.tbs{display:flex;overflow-x:auto;background:var(--sg);flex:none;min-height:34px}
+.tab{display:flex;align-items:center;gap:4px;padding:0 4px 0 12px;white-space:nowrap;font-size:13px;border-right:1px solid var(--bg)}.tab.on{background:var(--cb);box-shadow:inset 0 2px var(--ac)}.cd .tx{width:26px;min-height:26px;padding:0;font-size:11px}
+.ed2{flex:1;display:flex;min-height:0}.gt{padding:8px 8px 28px 6px;text-align:right;color:var(--gn);overflow:hidden;user-select:none;min-width:40px}.stk{flex:1;position:relative;min-width:0}
+.gt,.hl,.ta{font:13px/20px ui-monospace,Menlo,Consolas,"DejaVu Sans Mono",monospace;letter-spacing:0;tab-size:2;white-space:pre}
+.hl,.ta{position:absolute;inset:0;margin:0;padding:8px 8px 28px;border:0;border-radius:0;background:transparent;overflow:auto}.hl{overflow:hidden;pointer-events:none;color:var(--cf)}
+.ta{color:transparent;-webkit-text-fill-color:transparent;caret-color:var(--cf);resize:none;outline:0}.ta::selection{background:rgba(38,120,200,.45)}
+.hl i{font-style:normal}.hl .c{color:var(--tc)}.hl .s{color:var(--ts)}.hl .n{color:var(--tn)}.hl .k{color:var(--tk)}.hl .f{color:var(--tf)}
+.st{display:flex;justify-content:space-between;gap:8px;padding:2px 10px;background:#007acc;color:#fff;font-size:12px;flex:none;white-space:pre;overflow:hidden}
+.tp{height:38%;min-height:120px;display:flex;flex-direction:column;border-top:1px solid var(--bg);flex:none}
+.pv{position:absolute;inset:34px 0 0;background:#fff;display:flex;flex-direction:column;z-index:2}.pv iframe{flex:1;border:0;background:#fff}.pv .bar{color:#222}
+.pal{position:absolute;top:6px;left:50%;transform:translateX(-50%);width:min(520px,94%);background:var(--sg);border:1px solid var(--bg);border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.5);padding:6px;z-index:5}.pal input{width:100%;background:var(--cb);color:var(--cf)}.pl{max-height:240px;overflow:auto}
+@container (max-width:600px){.sb{position:absolute;left:44px;top:0;bottom:0;z-index:3;box-shadow:4px 0 14px rgba(0,0,0,.4)}}
+@media(pointer:fine){.xk{display:none}}
+@media(max-width:480px){.pb{width:36px}#clk{padding:0 4px}.dt{display:none}#pnl{gap:2px;padding-inline:4px}}
+</style></head><body>
+<div id="desk"><div id="icons"></div></div>
+<div id="pnl"><button class="pb" id="lb"></button><div id="mid"></div><div id="tray"><button class="pb" id="vol"></button><button class="pb" id="net"></button><button class="pb" id="bell">🔔<span class="bd" id="bd" hidden></span></button><div id="clk"></div></div></div>
+<div id="pop" hidden></div><div id="toast"></div>
+<script>
+const $=(s,e=document)=>e.querySelector(s);
+const h=(t,a,...c)=>{const e=document.createElement(t);for(const k in a||{}){const v=a[k];k.slice(0,2)==='on'?e.addEventListener(k.slice(2),v):k==='class'?e.className=v:e.setAttribute(k,v)}e.append(...c.flat().filter(x=>x!=null&&x!==false));return e};
+const T={en:{launcher:"Application launcher",notif:"Notifications",search:"Search apps",files:"Files",dev:"Development",sys:"System",min:"Minimize",max:"Maximize",close:"Close",up:"Up",newf:"New file",newd:"New folder",imp:"Import",open:"Open",ren:"Rename",copy:"Copy",cut:"Cut",paste:"Paste",del:"Delete",ok:"OK",cancel:"Cancel",sure:"Delete “{x}”? This can’t be undone.",empty:"This folder is empty",badname:"Invalid name",exists:"already exists",nodir:"not a directory",nofile:"no such file",isdir:"is a directory",vt:"WebLinux virtual terminal: simulated commands on the virtual filesystem, not a native Linux shell. Type help.",find:"Find",repl:"Replace",repall:"Replace all",save:"Save",saveas:"Save as",saved:"Saved",untitled:"Untitled",bin:"Binary file: can’t be edited as text.",discard:"Discard unsaved changes?",over:"“{x}” exists. Overwrite it?",theme:"Theme",light:"Light",dark:"Dark",accent:"Accent color",wall:"Wallpaper",lang:"Language",misc:"Clock and desktop",h24:"24-hour clock",dicons:"Desktop icons",stor:"Storage",snote:"Files live in WebLinux’s private browser storage, not in Android’s file system. External files come in only through Import.",bk:"Backup",exp:"Export",rs:"Restore",bkn:"A backup holds folders, text files and settings. Imported binary files are not included. Copy the text and keep it safe.",rsh:"Paste a WebLinux backup here. Existing files are kept.",rsd:"Restored {x} (new / already existing)",bad:"Invalid backup",zone:"Reset",reset:"Reset settings",rsq:"Reset settings to defaults?",erase:"Erase all files",erq:"Erase every file in WebLinux storage? This can’t be undone.",nonote:"No notifications",clear:"Clear",online:"Online",offline:"Offline",err:"Storage error",nostore:"Persistent storage is unavailable; changes won’t survive a reload.",nonative:"not available: WebLinux has no network or native process access",snd:"Sound",on:"On",off:"Off",vol:"Volume",expl:"Explorer",run:"Run",cmd:"Command palette",pal:"Type a file name, or > for commands",cwel:"Open a file from the explorer, or press Ctrl+P",nf:"Not found",norun:"Run supports JS and HTML files in the browser sandbox.",rf:"Refresh"},
+ar:{launcher:"قائمة التطبيقات",notif:"الإشعارات",search:"ابحث عن تطبيق",files:"الملفات",dev:"التطوير",sys:"النظام",min:"تصغير",max:"تكبير",close:"إغلاق",up:"أعلى",newf:"ملف جديد",newd:"مجلد جديد",imp:"استيراد",open:"فتح",ren:"إعادة تسمية",copy:"نسخ",cut:"قص",paste:"لصق",del:"حذف",ok:"موافق",cancel:"إلغاء",sure:"هل تريد حذف «{x}»؟ لا يمكن التراجع عن ذلك.",empty:"المجلد فارغ",badname:"اسم غير صالح",exists:"موجود مسبقًا",nodir:"ليس مجلدًا",nofile:"لا يوجد ملف بهذا الاسم",isdir:"هذا مجلد",vt:"طرفية WebLinux الافتراضية: أوامر محاكاة تعمل على نظام الملفات الافتراضي، وليست صدفة Linux حقيقية. اكتب help.",find:"بحث",repl:"استبدال",repall:"استبدال الكل",save:"حفظ",saveas:"حفظ باسم",saved:"تم الحفظ",untitled:"بدون عنوان",bin:"ملف ثنائي: لا يمكن تحريره كنص.",discard:"تجاهل التغييرات غير المحفوظة؟",over:"«{x}» موجود. هل تريد استبداله؟",theme:"السمة",light:"فاتح",dark:"داكن",accent:"لون التمييز",wall:"الخلفية",lang:"اللغة",misc:"الساعة وسطح المكتب",h24:"نظام 24 ساعة",dicons:"أيقونات سطح المكتب",stor:"التخزين",snote:"الملفات محفوظة في مخزن WebLinux الخاص داخل المتصفح، وليست في ملفات أندرويد. الملفات الخارجية تدخل عبر الاستيراد فقط.",bk:"النسخ الاحتياطي",exp:"تصدير",rs:"استعادة",bkn:"تتضمن النسخة المجلدات والملفات النصية والإعدادات. الملفات الثنائية المستوردة غير مشمولة. انسخ النص واحتفظ به.",rsh:"الصق نسخة WebLinux الاحتياطية هنا. لن تُستبدل الملفات الموجودة.",rsd:"تمت استعادة {x} (جديد / موجود مسبقًا)",bad:"نسخة احتياطية غير صالحة",zone:"إعادة الضبط",reset:"إعادة ضبط الإعدادات",rsq:"إعادة الإعدادات إلى الافتراضي؟",erase:"مسح جميع الملفات",erq:"مسح كل الملفات في مخزن WebLinux؟ لا يمكن التراجع عن ذلك.",nonote:"لا توجد إشعارات",clear:"مسح",online:"متصل",offline:"غير متصل",err:"خطأ في التخزين",nostore:"التخزين الدائم غير متاح؛ لن تُحفظ التغييرات بعد إعادة التحميل.",nonative:"غير متاح: لا يتوفر في WebLinux وصول إلى الشبكة أو العمليات الأصلية",snd:"الصوت",on:"تشغيل",off:"إيقاف",vol:"مستوى الصوت",expl:"المستكشف",run:"تشغيل",cmd:"لوحة الأوامر",pal:"اكتب اسم ملف، أو > للأوامر",cwel:"افتح ملفًا من المستكشف، أو اضغط Ctrl+P",nf:"لم يُعثر عليه",norun:"التشغيل يدعم ملفات JS وHTML داخل بيئة المتصفح المعزولة.",rf:"تحديث"}};
+const DEF={theme:'dark',lang:'en',ac:'#3daee9',wp:0,h24:true,icons:true,snd:true,vol:70,pins:['files','code','editor','term','settings']};
+let cfg;try{cfg={...DEF,...JSON.parse(localStorage.getItem('wl.cfg')||'{}')}}catch{cfg={...DEF}}
+if(Array.isArray(cfg.pins)&&!cfg.pins.includes('code'))cfg.pins.splice(1,0,'code');
+const t=(k,v)=>String((T[cfg.lang]||T.en)[k]??T.en[k]??k).replace('{x}',v??'');
+const saveCfg=()=>{try{localStorage.setItem('wl.cfg',JSON.stringify(cfg))}catch{note(t('err'))}};
+const WP=['linear-gradient(135deg,#1d3557,#3d5a80 50%,#0f6e8a)','linear-gradient(160deg,#2b1055,#7597de)','linear-gradient(150deg,#134e4a,#65a30d)','linear-gradient(135deg,#434343,#101214)'];
+const AC=['#3daee9','#1cdc9a','#f67400','#da4453','#9b59b6','#fdbc4b'];
+const fmt=n=>n<1024?n+' B':n<1048576?(n/1024).toFixed(1)+' KB':(n/1048576).toFixed(1)+' MB';
+const notes=[];
+function note(m,k){snd(k==='err'?'err':k==='ok'?'ok':'notify');notes.unshift(m);const d=h('div',{role:'status'},m);$('#toast').append(d);setTimeout(()=>d.remove(),4000);badge()}
+const badge=()=>{const b=$('#bd');b.textContent=notes.length;b.hidden=!notes.length};
+
+const V=(()=>{let db=null;const M=new Map();
+const norm=p=>{const o=[];for(const s of String(p).split('/'))s==='..'?o.pop():s&&s!=='.'&&o.push(s);return'/'+o.join('/')};
+const up=p=>norm(p+'/..'),nm=p=>p.split('/').pop(),isDir=p=>p==='/'||!!M.get(p)?.d,size=e=>e.d?0:(e.v.size??e.v.length);
+const idb=()=>new Promise((ok,no)=>{const r=indexedDB.open('weblinux',1);r.onupgradeneeded=()=>r.result.createObjectStore('f',{keyPath:'p'});r.onsuccess=()=>ok(r.result);r.onerror=()=>no(r.error)});
+async function save(put=[],del=[]){put.forEach(e=>M.set(e.p,e));del.forEach(p=>M.delete(p));if(!db)return;
+try{await new Promise((ok,no)=>{const x=db.transaction('f','readwrite'),s=x.objectStore('f');put.forEach(e=>s.put(e));del.forEach(p=>s.delete(p));x.oncomplete=ok;x.onerror=x.onabort=()=>no(x.error)})}catch(e){note(t('err')+': '+(e&&e.name||e),'err')}}
+const sub=p=>[...M.values()].filter(e=>e.p===p||e.p.startsWith(p+'/')),mk=(p,d,v)=>({p,d,v:d?null:v,m:Date.now()});
+async function mkdir(p){p=norm(p);const put=[];let c='';for(const s of p.split('/').filter(Boolean)){c+='/'+s;const e=M.get(c);if(e&&!e.d)throw Error(c+': '+t('nodir'));if(!e)put.push(mk(c,true))}await save(put)}
+async function write(p,v){p=norm(p);if(!isDir(up(p)))throw Error(up(p)+': '+t('nodir'));if(isDir(p))throw Error(p+': '+t('isdir'));await save([mk(p,false,v)])}
+async function mv(a,b,keep){a=norm(a);b=norm(b);if(!M.has(a))throw Error(a+': '+t('nofile'));if(M.has(b)||b==='/')throw Error(b+': '+t('exists'));if(b.startsWith(a+'/'))throw Error(t('badname'));if(!isDir(up(b)))throw Error(up(b)+': '+t('nodir'));
+const o=sub(a);await save(o.map(e=>({...e,p:b+e.p.slice(a.length),m:Date.now()})),keep?[]:o.map(e=>e.p))}
+const rm=p=>save([],sub(norm(p)).map(e=>e.p));
+const ls=p=>[...M.values()].filter(e=>up(e.p)===p).map(e=>({...e,n:nm(e.p)})).sort((a,b)=>b.d-a.d||a.n.localeCompare(b.n));
+const dump=()=>JSON.stringify({v:1,cfg,files:[...M.values()].filter(e=>e.d||typeof e.v==='string').map(({p,d,v})=>({p,d,v}))});
+async function restore(s){const o=JSON.parse(s);if(!o||!Array.isArray(o.files))throw Error('bad');const put=[],ids=new Set();let skip=0;
+for(const f of o.files){if(!f||typeof f.p!=='string'||norm(f.p)!==f.p||f.p==='/'||typeof f.d!=='boolean'||(!f.d&&typeof f.v!=='string'))continue;const pe=M.get(up(f.p));if(pe&&!pe.d)continue;if(M.has(f.p)){skip++;continue}put.push(mk(f.p,f.d,f.v));ids.add(f.p)}
+for(const e of [...put]){let q=up(e.p);while(q!=='/'){if(!M.has(q)&&!ids.has(q)){ids.add(q);put.push(mk(q,true))}q=up(q)}}
+await save(put);return[put.length,skip,o.cfg]}
+async function seed(){for(const d of ['home/user/Documents','home/user/Downloads','home/user/Pictures','home/user/Music','home/user/Videos','home/user/Desktop','home/user/Projects','home/user/.config','home/user/.local/share','tmp','etc','usr/share/applications'])await mkdir('/'+d);
+await write('/home/user/Documents/welcome.txt','Welcome to WebLinux OS.\nThese files live in private browser storage, not in Android’s file system.\n');await write('/etc/os-release','NAME="WebLinux"\nVERSION="1.0 (virtual)"\n')}
+async function init(){try{db=await idb();const all=await new Promise((ok,no)=>{const r=db.transaction('f').objectStore('f').getAll();r.onsuccess=()=>ok(r.result);r.onerror=()=>no(r.error)});all.forEach(e=>M.set(e.p,e))}catch{db=null;note(t('nostore'))}
+if(!M.size)await seed();try{navigator.storage?.persist?.()}catch{}}
+const clear=async()=>{await save([],[...M.keys()]);await seed()};
+const usage=async()=>{let n=0;M.forEach(e=>n+=size(e));let q=null;try{q=await navigator.storage?.estimate?.()}catch{}return{n,q}};
+return{norm,up,nm,isDir,size,mkdir,write,mv,rm,ls,get:p=>M.get(norm(p)),dump,restore,init,clear,usage,count:()=>M.size,all:()=>[...M.keys()]}})();
+
+function ask(msg,o={}){return new Promise(r=>{const i=o.ta?h('textarea',{rows:8}):o.in?h('input'):null;if(i&&o.val!=null)i.value=o.val;const done=v=>{m.remove();r(v)};
+const m=h('div',{class:'mod',onkeydown:e=>{if(e.key==='Escape')done(null);else if(e.key==='Enter'&&e.target===i)done(i.value)}},h('div',{class:'dlg',role:'dialog'},h('p',{},msg),i,h('div',{class:'row'},h('button',{onclick:()=>done(null)},t('cancel')),h('button',{class:'pri',onclick:()=>done(i?i.value:true)},o.ok||t('ok')))));
+document.body.append(m);snd('pop');(i||m.querySelector('.pri')).focus();i&&i.select()})}
+
+const REG={
+files:{n:{en:'Files',ar:'الملفات'},g:'📁',c:'#3daee9',cat:'files',w:560,h:400,run:files},
+code:{n:{en:'Code',ar:'Code'},g:'{ }',c:'#007acc',cat:'dev',w:740,h:480,run:code,multi:1},
+editor:{n:{en:'Text Editor',ar:'محرر النصوص'},g:'📝',c:'#f67400',cat:'dev',w:520,h:380,run:editor,multi:1},
+term:{n:{en:'Terminal',ar:'الطرفية'},g:'⌨️',c:'#4d4d4d',cat:'dev',w:540,h:340,run:term,multi:1},
+settings:{n:{en:'Settings',ar:'الإعدادات'},g:'⚙️',c:'#1cdc9a',cat:'sys',w:520,h:460,run:settings}};
+const ic=a=>{const e=h('span',{class:'ic','aria-hidden':'true'},a.g);e.style.background='linear-gradient(160deg,rgba(255,255,255,.28),rgba(0,0,0,.2)),'+a.c;return e};
+
+const wins=[],desk=$('#desk');let zi=10,act=null;
+function openApp(id,arg){const a=REG[id];if(!a)return;const ex=wins.find(w=>w.app===id);if(ex&&!a.multi){show(ex);ex.api.open?.(arg);return}
+const w={app:id,min:false},el=w.el=h('div',{class:'w',role:'dialog','aria-label':a.n[cfg.lang]}),ti=h('b'),body=h('div',{class:'wb'});
+w.setT=s=>{w.cap=s;ti.textContent=s??a.n[cfg.lang]};w.setT();
+const tb=h('div',{class:'tb'},ti,h('button',{'aria-label':t('min'),onclick:()=>minimize(w)},'–'),h('button',{'aria-label':t('max'),onclick:()=>el.classList.toggle('max')},'□'),h('button',{class:'x','aria-label':t('close'),onclick:()=>close(w)},'✕'));
+el.append(tb,body);const dw=desk.clientWidth,dh=desk.clientHeight,W=Math.min(a.w,dw-16),H=Math.min(a.h,dh-16),o=(wins.length%6)*26;
+Object.assign(el.style,{width:W+'px',height:H+'px',left:Math.max(0,Math.min(110+o,dw-W))+'px',top:Math.max(0,Math.min(20+o,dh-H))+'px'});if(dw<700)el.classList.add('max');
+try{w.api=a.run(body,w,arg)||{}}catch(e){note(e.message);return}
+el.addEventListener('pointerdown',()=>focus(w),true);tb.ondblclick=e=>{if(!e.target.closest('button'))el.classList.toggle('max')};
+tb.onpointerdown=e=>{if(e.target.closest('button')||el.classList.contains('max'))return;const r=el.getBoundingClientRect(),d=desk.getBoundingClientRect(),dx=e.clientX-r.left,dy=e.clientY-r.top;tb.setPointerCapture(e.pointerId);
+const mv=ev=>{el.style.left=Math.max(40-r.width,Math.min(ev.clientX-dx-d.left,d.width-40))+'px';el.style.top=Math.max(0,Math.min(ev.clientY-dy-d.top,d.height-38))+'px'};
+const end=()=>{tb.removeEventListener('pointermove',mv);tb.removeEventListener('pointerup',end);tb.removeEventListener('pointercancel',end)};tb.addEventListener('pointermove',mv);tb.addEventListener('pointerup',end);tb.addEventListener('pointercancel',end)};
+desk.append(el);wins.push(w);focus(w);snd('open')}
+function focus(w){act=w;w.el.style.zIndex=++zi;wins.forEach(x=>x.el.classList.toggle('act',x===w));task()}
+function show(w){if(w.min)snd('restore');w.min=false;w.el.classList.remove('min');focus(w)}
+function next(){const n=wins.filter(x=>!x.min).sort((a,b)=>b.el.style.zIndex-a.el.style.zIndex)[0];n?focus(n):task()}
+function minimize(w){snd('min');w.min=true;w.el.classList.add('min');if(act===w){act=null;next()}else task()}
+async function close(w){if(w.api.dirty?.()&&!await ask(t('discard')))return;w.api.dispose?.();snd('close');w.el.remove();wins.splice(wins.indexOf(w),1);if(act===w){act=null;next()}else task()}
+addEventListener('resize',()=>{const W=desk.clientWidth,H=desk.clientHeight;wins.forEach(w=>{if(w.el.classList.contains('max'))return;const s=w.el.style;s.left=Math.max(0,Math.min(parseFloat(s.left)||0,W-Math.min(w.el.offsetWidth,W)))+'px';s.top=Math.max(0,Math.min(parseFloat(s.top)||0,H-38))+'px'})});
+
+function task(){const m=$('#mid');m.replaceChildren();const ids=[...cfg.pins];wins.forEach(w=>ids.includes(w.app)||ids.push(w.app));
+ids.forEach(id=>{const a=REG[id];if(!a)return;const ws=wins.filter(w=>w.app===id),on=ws.includes(act)&&!act.min;
+m.append(h('button',{class:'pb'+(ws.length?' run':'')+(on?' act':'')+(ws.length&&ws.every(w=>w.min)?' mn':''),title:a.n[cfg.lang],'aria-label':a.n[cfg.lang],
+onclick:()=>{if(!ws.length)return openApp(id);if(on&&ws.length===1)return minimize(ws[0]);show(on?ws[(ws.indexOf(act)+1)%ws.length]:ws[ws.length-1])}},ic(a)))})}
+function icons(){const c=$('#icons');c.replaceChildren();c.classList.toggle('off',!cfg.icons);let lt=0,lid;
+Object.entries(REG).forEach(([id,a])=>{const b=h('button',{class:'di',onclick:()=>{const n=Date.now();if(lid===id&&n-lt<450){openApp(id);lt=0}else{c.querySelectorAll('.sel').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');lid=id;lt=n}},onkeydown:e=>{if(e.key==='Enter'){e.preventDefault();openApp(id)}}},ic(a),a.n[cfg.lang]);c.append(b)})}
+desk.addEventListener('pointerdown',e=>{if(e.target===desk||e.target.id==='icons')$('#icons').querySelectorAll('.sel').forEach(x=>x.classList.remove('sel'))});
+
+let pn=null,bat='';const PO=$('#pop');
+function popup(n,b,s){if(pn===n)return closePop();pn=n;snd('pop');PO.replaceChildren(b());PO.className=s;PO.hidden=false}
+function closePop(){pn=null;PO.hidden=true}
+addEventListener('pointerdown',e=>{if(pn&&!e.target.closest('#pop,#pnl'))closePop()});
+addEventListener('keydown',e=>{if(e.key==='Escape')closePop();if(e.ctrlKey&&e.altKey&&e.key.toLowerCase()==='t'){e.preventDefault();openApp('term')}});
+function launcher(){const s=h('input',{type:'search',placeholder:t('search'),'aria-label':t('search'),style:'width:100%'}),l=h('div');
+const draw=()=>{l.replaceChildren();const q=s.value.trim().toLowerCase();for(const c of ['files','dev','sys']){const as=Object.entries(REG).filter(([,a])=>a.cat===c&&(!q||Object.values(a.n).join(' ').toLowerCase().includes(q)));if(as.length)l.append(h('h4',{},t(c)),...as.map(([id,a])=>h('button',{class:'li',onclick:()=>{closePop();openApp(id)}},ic(a),a.n[cfg.lang])))}};
+s.oninput=draw;draw();if(!matchMedia('(pointer:coarse)').matches)setTimeout(()=>s.focus());return h('div',{},s,l)}
+const quick=()=>h('div',{style:'display:grid;gap:8px'},h('div',{},(navigator.onLine?t('online'):t('offline'))+(bat?' · 🔋 '+bat:'')),
+h('button',{onclick:()=>set({theme:cfg.theme==='dark'?'light':'dark'})},t('theme')+': '+t(cfg.theme)),h('button',{onclick:()=>set({lang:cfg.lang==='en'?'ar':'en'})},'English / العربية'),h('button',{onclick:()=>{closePop();openApp('settings')}},REG.settings.n[cfg.lang]));
+const notif=()=>h('div',{style:'display:grid;gap:6px'},...(notes.length?notes.map(n=>h('div',{},n)):[h('div',{},t('nonote'))]),h('button',{onclick:()=>{notes.length=0;badge();closePop()}},t('clear')));
+function clock(){const d=new Date(),L=cfg.lang==='ar'?'ar':'en';$('#clk').replaceChildren(h('b',{},d.toLocaleTimeString(L,{hour:'2-digit',minute:'2-digit',hour12:!cfg.h24})),h('span',{class:'dt'},d.toLocaleDateString(L,{weekday:'short',day:'numeric',month:'short'})))}
+const netUp=()=>{const n=$('#net');n.textContent=navigator.onLine?'📶':'⚠️';n.setAttribute('aria-label',navigator.onLine?t('online'):t('offline'))};
+function set(o){Object.assign(cfg,o);saveCfg();apply()}
+function apply(){const R=document.documentElement;R.dataset.theme=cfg.theme==='light'?'light':'dark';const L=cfg.lang==='ar'?'ar':'en';R.lang=L;R.dir=L==='ar'?'rtl':'ltr';
+R.style.setProperty('--ac',/^#[0-9a-f]{6}$/i.test(cfg.ac)?cfg.ac:DEF.ac);R.style.setProperty('--wp',WP[cfg.wp]||WP[0]);if(!Array.isArray(cfg.pins))cfg.pins=[...DEF.pins];
+$('#lb').setAttribute('aria-label',t('launcher'));$('#vol').textContent=cfg.snd?'🔊':'🔇';$('#vol').setAttribute('aria-label',t('snd'));$('#bell').setAttribute('aria-label',t('notif'));closePop();icons();task();clock();netUp();wins.forEach(w=>{w.setT(w.cap);w.api.refresh?.()})}
+
+function files(body,w,arg){let cwd=arg&&V.isDir(arg)?arg:'/home/user',sel=null,clip=null,lt={p:null,t:0};
+const bar=h('div',{class:'bar'}),path=h('div',{style:'padding:6px 10px;color:var(--mut);border-bottom:1px solid var(--bd);flex:none;direction:ltr;text-align:start;overflow:hidden;text-overflow:ellipsis;white-space:nowrap'}),list=h('div',{class:'list'}),fi=h('input',{type:'file',multiple:'',hidden:''});
+body.append(bar,path,list,fi);const err=e=>note(e.message||String(e),'err'),go=p=>{cwd=p;sel=null;lt={p:null,t:0};draw()},open=e=>e.d?go(e.p):openApp('editor',e.p);
+const ok=n=>{n=(n||'').trim();if(!n||/[\/\\\0]/.test(n)||n==='.'||n==='..')throw Error(t('badname'));return n};
+const A={up:()=>go(V.up(cwd)),
+newf:async()=>{const n=await ask(t('newf'),{in:1,val:'untitled.txt'});if(n)try{await V.write(cwd+'/'+ok(n),'');draw()}catch(e){err(e)}},
+newd:async()=>{const n=await ask(t('newd'),{in:1,val:'New folder'});if(n)try{const p=cwd+'/'+ok(n);if(V.get(p))throw Error(p+': '+t('exists'));await V.mkdir(p);draw()}catch(e){err(e)}},
+imp:()=>fi.click(),open:()=>sel&&open(sel),
+ren:async()=>{const n=await ask(t('ren'),{in:1,val:sel.n});if(n&&n!==sel.n)try{await V.mv(sel.p,cwd+'/'+ok(n));sel=null;draw()}catch(e){err(e)}},
+copy:()=>{clip={cp:1,p:sel.p};draw()},cut:()=>{clip={p:sel.p};draw()},
+paste:async()=>{try{await V.mv(clip.p,cwd+'/'+V.nm(clip.p),clip.cp);if(!clip.cp)clip=null;draw()}catch(e){err(e)}},
+del:async()=>{if(await ask(t('sure',sel.n),{ok:t('del')})){await V.rm(sel.p);sel=null;draw()}}};
+fi.onchange=async()=>{for(const f of fi.files){try{const n=ok(f.name),txt=/^text\/|json|xml|javascript/.test(f.type)||/\.(txt|md|js|json|css|html|sh|py|csv|log|ini|conf)$/i.test(n);if(V.get(cwd+'/'+n))throw Error(n+': '+t('exists'));await V.write(cwd+'/'+n,txt?await f.text():f)}catch(e){err(e)}}fi.value='';draw()};
+function draw(){bar.replaceChildren(...[['up'],['newf'],['newd'],['imp'],['open',1],['ren',1],['copy',1],['cut',1],['paste',0,1],['del',1]].map(([k,s,p])=>h('button',{onclick:A[k],...((s&&!sel)||(p&&!clip)?{disabled:''}:{})},t(k))));
+path.textContent=cwd;const es=V.ls(cwd);
+list.replaceChildren(...(es.length?es.map(e=>h('div',{class:'fi'+(sel&&sel.p===e.p?' sel':''),tabindex:'0',onclick:()=>{if(lt.p===e.p&&Date.now()-lt.t<450)open(e);else{sel=e;lt={p:e.p,t:Date.now()};draw()}},onkeydown:ev=>{if(ev.key==='Enter')open(e)}},h('span',{},e.d?'📁':'📄'),h('span',{},h('bdi',{},e.n)),h('small',{},e.d?'':fmt(V.size(e))))):[h('div',{style:'padding:20px;color:var(--mut)'},t('empty'))]))}
+draw();return{open:p=>{if(p&&V.isDir(p))go(p)},refresh:draw}}
+
+function editor(body,w,arg){let path=null,dirty=false;const ta=h('textarea',{class:'ed',spellcheck:'false','aria-label':'Editor'}),bar=h('div',{class:'bar'}),f=h('input',{placeholder:t('find'),style:'width:80px;flex:1'}),r=h('input',{placeholder:t('repl'),style:'width:80px;flex:1'});
+const title=()=>w.setT((dirty?'● ':'')+(path?V.nm(path):t('untitled'))),mark=()=>{dirty=true;title()};
+async function put(p){try{await V.write(p,ta.value);path=p;dirty=false;title();note(t('saved'),'ok')}catch(e){note(e.message,'err')}}
+const save=()=>path?put(path):saveAs();
+async function saveAs(){const n=await ask(t('saveas'),{in:1,val:path||'/home/user/Documents/untitled.txt'});if(!n)return;const p=V.norm(n[0]==='/'?n:'/home/user/Documents/'+n);if(V.get(p)&&p!==path&&!await ask(t('over',p)))return;put(p)}
+const tools=()=>bar.replaceChildren(h('button',{class:'pri',onclick:save},t('save')),h('button',{onclick:saveAs},t('saveas')),f,r,h('button',{onclick:()=>{if(f.value){ta.value=ta.value.split(f.value).join(r.value);mark()}}},t('repall')));
+ta.oninput=mark;ta.onkeydown=e=>{if((e.ctrlKey||e.metaKey)&&e.key==='s'){e.preventDefault();save()}};body.append(bar,ta);
+const api={async open(p){const e=p&&V.get(p);if(!e||e.d)return;if(typeof e.v!=='string')return note(t('bin'));if(dirty&&!await ask(t('discard')))return;path=e.p;ta.value=e.v;dirty=false;title()},dirty:()=>dirty,refresh:tools};
+tools();title();if(arg)api.open(arg);return api}
+
+let AX=null;
+function snd(k){if(!cfg.snd)return;try{if(!AX){if(navigator.userActivation&&!navigator.userActivation.isActive)return;AX=new(window.AudioContext||window.webkitAudioContext)()}if(AX.state==='suspended')AX.resume();
+const S={start:[[523,0,.14],[659,.12,.14],[784,.24,.3]],open:[[440,0,.07,'sine',.8],[660,.06,.1]],close:[[560,0,.06],[380,.05,.1]],min:[[500,0,.12,'sine',.6,300]],restore:[[300,0,.12,'sine',.6,520]],notify:[[880,0,.09],[1175,.1,.16]],ok:[[660,0,.07],[990,.07,.12]],err:[[220,0,.14,'square',.4],[160,.13,.2,'square',.4]],pop:[[600,0,.05,'sine',.6,800]]}[k];if(!S)return;
+const m=AX.createGain(),t0=AX.currentTime+.01;m.gain.value=cfg.vol/100*.3;m.connect(AX.destination);
+for(const[f,d,l,ty,v,to]of S){const o=AX.createOscillator(),g=AX.createGain();o.type=ty||'sine';o.frequency.setValueAtTime(f,t0+d);if(to)o.frequency.linearRampToValueAtTime(to,t0+d+l);g.gain.setValueAtTime(.0001,t0+d);g.gain.linearRampToValueAtTime(v||1,t0+d+.01);g.gain.setValueAtTime(v||1,t0+d+l*.4);g.gain.exponentialRampToValueAtTime(.0001,t0+d+l);o.connect(g);g.connect(m);o.start(t0+d);o.stop(t0+d+l+.02)}}catch{}}
+const sndCtl=()=>h('div',{class:'row',style:'width:100%'},h('button',{class:cfg.snd?'on':'',onclick:()=>{set({snd:!cfg.snd});snd('ok')}},(cfg.snd?'🔊 ':'🔇 ')+t(cfg.snd?'on':'off')),h('input',{type:'range',min:'0',max:'100',value:String(cfg.vol),'aria-label':t('vol'),style:'flex:1;min-width:90px',oninput:e=>{cfg.vol=+e.target.value;saveCfg()},onchange:()=>snd('ok')}));
+function first(){['pointerup','keydown'].forEach(e=>removeEventListener(e,first,true));snd('start')}
+['pointerup','keydown'].forEach(e=>addEventListener(e,first,true));
+
+function runJS(src){return new Promise(res=>{const k=Math.random().toString(36).slice(2),log=[],f=h('iframe',{sandbox:'allow-scripts',style:'display:none',title:'run'});let it,cap;
+const end=()=>{removeEventListener('message',ml);clearTimeout(it);clearTimeout(cap);f.remove();res(log.join('\n'))},bump=n=>{clearTimeout(it);it=setTimeout(end,n||700)};
+const ml=e=>{const d=e.data;if(d&&d.wl===k){log.push(d.m);bump()}};addEventListener('message',ml);cap=setTimeout(()=>{log.push('[stopped after 5 s]');end()},5000);bump(1500);f.addEventListener('load',()=>bump());
+f.srcdoc='<script>const K='+JSON.stringify(k)+',L=(p,a)=>parent.postMessage({wl:K,m:(p?p+": ":"")+a.map(x=>{try{return typeof x==="string"?x:JSON.stringify(x)}catch(e){return String(x)}}).join(" ")},"*");console.log=console.info=(...a)=>L("",a);console.warn=(...a)=>L("warn",a);console.error=(...a)=>L("error",a);addEventListener("error",e=>L("Uncaught",[e.message+" (line "+e.lineno+")"]));addEventListener("unhandledrejection",e=>L("Uncaught (in promise)",[String(e.reason)]))<\/script><script>'+src.replace(/<\/script/gi,'<\\/script')+'\n<\/script>';document.body.append(f)})}
+
+function shell(c0){let cwd=c0||'/home/user';const env={USER:'user',HOME:'/home/user',HOSTNAME:'weblinux',SHELL:'/bin/wlsh'},hist=[];
+const rp=p=>{p=p.replace(/^~(?=\/|$)/,'/home/user');return V.norm(p[0]==='/'?p:cwd+'/'+p)},N=(x,n=1)=>{if(x.length<n)throw Error('missing operand');return x};
+const rd=x=>{const e=V.get(rp(x));if(!e)throw Error(x+': '+t('nofile'));if(e.d)throw Error(x+': '+t('isdir'));if(typeof e.v!=='string')throw Error(x+': '+t('bin'));return e.v};
+const FL=a=>a.filter(x=>/^-[a-z]+$/i.test(x)).join(''),AR=a=>a.filter(x=>!/^-[a-z]+$/i.test(x)),txt=(a,i)=>a.length?a.map(rd).join(''):i||'',lines=s=>s.replace(/\n$/,'').split('\n');
+const gl=a=>a.flatMap(x=>{if(!/[*?]/.test(x))return[x];const i=x.lastIndexOf('/'),pre=x.slice(0,i+1),re=new RegExp('^'+x.slice(i+1).replace(/[.+^${}()|[\]\\]/g,'\\$&').replace(/\*/g,'.*').replace(/\?/g,'.')+'$'),m=V.ls(rp(pre||'.')).filter(e=>re.test(e.n)).map(e=>pre+e.n);return m.length?m:[x]});
+const ht=(a,i,e)=>{const j=a.indexOf('-n'),n=j>=0?+a[j+1]||10:10,l=lines(txt(a.filter((x,k)=>j<0||(k!==j&&k!==j+1)),i));return(e?l.slice(-n):l.slice(0,n)).join('\n')};
+const K={
+help:()=>'Commands: '+Object.keys(K).sort().join(' ')+'\nPipes |, redirects > >>, ; && ||, $VAR, wildcards, Tab completion, up/down history.\nnode runs JavaScript in a sandboxed browser context (no Node APIs).',
+clear:()=>'\f',pwd:()=>cwd,whoami:()=>env.USER,hostname:()=>env.HOSTNAME,date:()=>new Date().toString(),id:()=>'uid=1000(user) gid=1000(user)',
+uname:a=>a.includes('-a')?'WebLinux weblinux 1.0 browser-virtual':'WebLinux',beep:()=>{snd('notify')},echo:a=>a.join(' '),env:()=>Object.entries(env).map(e=>e.join('=')).join('\n'),
+export:a=>{a.forEach(x=>{const i=x.indexOf('=');if(i>0)env[x.slice(0,i)]=x.slice(i+1)})},history:()=>hist.map((l,i)=>(i+1)+'  '+l).join('\n'),
+cd:a=>{const p=rp(a[0]||'~');if(!V.isDir(p))throw Error('cd: '+(a[0]||p)+': '+t('nodir'));cwd=p},
+ls:a=>{const f=FL(a),xs=AR(a),o=[];for(const x of xs.length?xs:['.']){const p=rp(x),e=V.get(p);if(!e&&p!=='/')throw Error('ls: '+x+': '+t('nofile'));const es=V.isDir(p)?V.ls(p).filter(q=>f.includes('a')||q.n[0]!=='.'):[{...e,n:x}];o.push(es.map(q=>f.includes('l')?(q.d?'d':'-')+'rw-r--r-- '+String(V.size(q)).padStart(7)+' '+new Date(q.m).toISOString().slice(0,16).replace('T',' ')+' '+q.n+(q.d?'/':''):q.n+(q.d?'/':'')).join(f.includes('l')?'\n':'  '))}return o.join('\n')},
+tree:a=>{const p=rp(AR(a)[0]||'.'),w=(d,pre)=>V.ls(d).flatMap((e,j,r)=>{const l=j===r.length-1;return[pre+(l?'└── ':'├── ')+e.n].concat(e.d?w(e.p,pre+(l?'    ':'│   ')):[])});return[p,...w(p,'')].join('\n')},
+mkdir:async a=>{for(const x of N(AR(a)))await V.mkdir(rp(x))},touch:async a=>{for(const x of N(a)){const p=rp(x);if(!V.get(p))await V.write(p,'')}},
+cat:(a,i)=>txt(a,i),cp:async a=>{const x=N(AR(a),2);await V.mv(rp(x[0]),rp(x[1]),true)},mv:async a=>{const x=N(AR(a),2);await V.mv(rp(x[0]),rp(x[1]))},
+rm:async a=>{const f=FL(a);for(const x of N(AR(a))){const p=rp(x),e=V.get(p);if(!e){if(f.includes('f'))continue;throw Error('rm: '+x+': '+t('nofile'))}if(e.d&&!/[rR]/.test(f))throw Error('rm: '+x+': '+t('isdir'));await V.rm(p)}},
+find:a=>{const q=(AR(a)[0]||'').toLowerCase(),b=cwd==='/'?'/':cwd+'/';return V.all().filter(p=>(p===cwd||p.startsWith(b))&&p.toLowerCase().includes(q)).sort().join('\n')},
+grep:(a,i)=>{const f=FL(a),x=N(AR(a)),re=new RegExp(x[0],f.includes('i')?'i':''),fs=x.slice(1),L=(s,n)=>lines(s).map((l,j)=>[l,j+1]).filter(m=>re.test(m[0])).map(m=>(n?n+':':'')+(f.includes('n')?m[1]+':':'')+m[0]);return(fs.length?fs.flatMap(n=>L(rd(n),fs.length>1?n:'')):L(i||'')).join('\n')},
+head:(a,i)=>ht(a,i,0),tail:(a,i)=>ht(a,i,1),wc:(a,i)=>{const s=txt(AR(a),i);return[(s.match(/\n/g)||[]).length,(s.match(/\S+/g)||[]).length,s.length].join(' ')},
+sort:(a,i)=>{const l=lines(txt(AR(a),i)).sort();return(FL(a).includes('r')?l.reverse():l).join('\n')},uniq:(a,i)=>lines(txt(a,i)).filter((l,j,r)=>l!==r[j-1]).join('\n'),
+open:a=>{const x=N(a)[0];if(REG[x])return openApp(x);const p=rp(x);if(!V.get(p)&&p!=='/')throw Error(x+': '+t('nofile'));openApp(V.isDir(p)?'files':'editor',p)},
+code:a=>{const p=rp(a[0]||'.');if(!V.get(p)&&p!=='/')throw Error(a[0]+': '+t('nofile'));openApp('code',p)},
+ed:async a=>{const p=rp(N(AR(a))[0]);if(!V.get(p))await V.write(p,'');openApp('editor',p)},
+node:async a=>{const e=a.indexOf('-e');return runJS(e>=0?a.slice(e+1).join(' '):rd(N(a)[0]))},
+neofetch:async()=>{const u=await V.usage();return'user@weblinux\n--------------\nOS: WebLinux OS 1.0 (virtual)\nShell: wlsh (simulated)\nEntries: '+V.count()+'\nUsed: '+fmt(u.n)+'\nLang: '+cfg.lang}};
+K.nano=K.vi=K.vim=K.edit=K.ed;const NA=new Set('curl wget ping ssh git apt sudo python python3 npm pip'.split(' '));
+const ex=s=>s.replace(/\$\{?(\w+)\}?/g,(_,k)=>env[k]??'').replace(/\u0001/g,'$');
+const tok=l=>[...l.matchAll(/"([^"]*)"|'([^']*)'|(&&|\|\||>>|[|;>]|[^\s|;>&"']+)/g)].map(m=>m[1]!=null?{w:m[1]}:m[2]!=null?{w:m[2].replace(/\$/g,'\u0001')}:/^(&&|\|\||>>|[|;>])$/.test(m[3])?{op:m[3]}:{w:m[3]});
+async function run(line){const lists=[];let pl=[{a:[]}],c=pl[0],sep=';';const T=tok(line);
+for(let j=0;j<T.length;j++){const k=T[j];if(!k.op)c.a.push(k.w);else if(k.op==='|')pl.push(c={a:[]});else if(k.op==='>'||k.op==='>>'){c.r=k.op;c.f=T[++j]&&T[j].w}else{lists.push({pl,sep});pl=[c={a:[]}];sep=k.op}}
+lists.push({pl,sep});let out='',ok=true;const add=s=>{out+=(out&&!out.endsWith('\n')?'\n':'')+s};
+for(const L of lists){if((L.sep==='&&'&&!ok)||(L.sep==='||'&&ok))continue;
+try{let inp='';for(const q of L.pl){if(!q.a.length)continue;const av=q.a.map(ex),nm=av[0];if(NA.has(nm))throw Error(nm+': '+t('nonative'));if(!Object.hasOwn(K,nm))throw Error(nm+': command not found');inp=String(await K[nm](gl(av.slice(1)),inp)??'');
+if(q.r){if(!q.f)throw Error('missing file');const p=rp(ex(q.f)),o=V.get(p);await V.write(p,(q.r==='>>'&&o&&typeof o.v==='string'?o.v:'')+inp+(inp&&!inp.endsWith('\n')?'\n':''));inp=''}}
+if(inp)add(inp);ok=true}catch(e){add(e.message);ok=false;snd('err')}}
+return out}
+const comp=l=>{const w=/\S*$/.exec(l)[0],first=!/\s/.test(l.trim()),i=w.lastIndexOf('/'),dir=w.slice(0,i+1),b=w.slice(i+1);return{w,c:first&&!dir?Object.keys(K).filter(k=>k.startsWith(b)).sort():V.ls(rp(dir||'.')).filter(e=>e.n.startsWith(b)).map(e=>dir+e.n+(e.d?'/':''))}};
+return{run,hist,comp,prompt:()=>env.USER+'@weblinux:'+(cwd===env.HOME?'~':cwd.startsWith(env.HOME+'/')?'~'+cwd.slice(env.HOME.length):cwd)+'$'}}
+
+function termUI(host,sh){let hi=0;const out=h('div'),inp=h('input',{'aria-label':'Terminal',enterkeyhint:'send',autocapitalize:'off',autocorrect:'off',autocomplete:'off',spellcheck:'false'}),pr=h('span',{style:'flex:none;white-space:nowrap'}),tm=h('div',{class:'tm'},out,h('div',{style:'display:flex;gap:6px'},pr,inp)),
+print=s=>{out.append(h('div',{},s));tm.scrollTop=tm.scrollHeight},P=()=>{pr.textContent=sh.prompt()};
+async function submit(){const l=inp.value;inp.value='';print(pr.textContent+' '+l);if(l.trim()){sh.hist.push(l);hi=sh.hist.length;const r=await sh.run(l);if(r.includes('\f'))out.replaceChildren();else if(r)print(r)}P();tm.scrollTop=tm.scrollHeight;inp.focus()}
+function key(k){if(k==='Tab'){const{w,c}=sh.comp(inp.value);if(c.length===1)inp.value=inp.value.slice(0,inp.value.length-w.length)+c[0]+(c[0].endsWith('/')?'':' ');else if(c.length){print(c.join('  '));snd('pop')}}
+else if(k==='C-c'){print(pr.textContent+' '+inp.value+'^C');inp.value=''}
+else if(k==='Up'||k==='Down'){hi=Math.max(0,Math.min(sh.hist.length,hi+(k==='Up'?-1:1)));inp.value=sh.hist[hi]||''}
+else inp.setRangeText(k,inp.selectionStart,inp.selectionEnd,'end');inp.focus()}
+inp.onkeydown=e=>{const k=e.key;if(k==='Enter'||e.keyCode===13){e.preventDefault();submit()}else if(k==='Tab'||k==='ArrowUp'||k==='ArrowDown'){e.preventDefault();key(k==='Tab'?'Tab':k==='ArrowUp'?'Up':'Down')}else if(e.ctrlKey&&k==='c'&&inp.selectionStart===inp.selectionEnd){e.preventDefault();key('C-c')}else if(e.ctrlKey&&k==='l'){e.preventDefault();out.replaceChildren()}};
+const ks=h('div',{class:'bar xk'},...[['Tab','Tab'],['Ctrl+C','C-c'],['↑','Up'],['↓','Down'],['|','|'],['/','/'],['~','~'],['>','>'],['-','-']].map(([l,k])=>h('button',{onclick:()=>key(k)},l)));
+tm.onclick=()=>{if(!getSelection().toString())inp.focus()};host.append(tm,ks);print(t('vt'));P();
+return{focus:()=>inp.focus(),exec:l=>{inp.value=l;return submit()}}}
+function term(body){const u=termUI(body,shell());setTimeout(u.focus);return{}}
+
+const esc=s=>s.replace(/[&<>]/g,c=>c==='&'?'&amp;':c==='<'?'&lt;':'&gt;');
+const KW={js:'async|await|break|case|catch|class|const|continue|default|delete|do|else|export|extends|false|finally|for|from|function|if|import|in|instanceof|let|new|null|of|return|static|super|switch|this|throw|true|try|typeof|undefined|var|void|while|yield',py:'and|as|assert|async|await|class|continue|def|del|elif|else|except|False|finally|for|from|global|if|import|in|is|lambda|None|not|or|pass|raise|return|True|try|while|with|yield',sh:'case|cd|do|done|echo|elif|else|esac|exit|export|fi|for|function|if|in|ls|return|then|while'};
+const rS=/"(?:\\.|[^"\\\n])*"|'(?:\\.|[^'\\\n])*'/.source,rN=/\b\d+(?:\.\d+)?\b/.source,rI=/\b[A-Za-z_$][\w$]*(?=\()/.source,NO='(?!)',kw=l=>'\\b(?:'+KW[l]+')\\b';
+const rx=(c,s,n,k,f,fl)=>new RegExp('('+c+')|('+s+')|('+n+')|('+k+')|('+f+')',fl||'g');
+const RX={js:rx(/\/\/.*|\/\*[\s\S]*?\*\//.source,rS+'|'+/`(?:\\[\s\S]|[^`\\])*`/.source,rN,kw('js'),rI),
+py:rx(/#.*/.source,/"{3}[\s\S]*?"{3}|'{3}[\s\S]*?'{3}/.source+'|'+rS,rN,kw('py'),rI),sh:rx(/#.*/.source,rS,rN,kw('sh'),/\$\w+/.source),
+css:rx(/\/\*[\s\S]*?\*\//.source,rS,/(?<![\w#.-])-?\d*\.?\d+(?:px|em|rem|%|vh|vw|s|ms|deg)?|#[0-9a-fA-F]{3,8}\b/.source,/@[\w-]+/.source,/[\w-]+(?=\s*:)/.source),
+html:rx(/<!--[\s\S]*?-->/.source,rS,NO,/<\/?[A-Za-z][\w-]*|\/?>/.source,/[\w:-]+(?==)/.source),
+md:rx(/<!--[\s\S]*?-->/.source,/`[^`\n]+`/.source,/^\s*(?:[-*+]|\d+\.)\s/.source,/^#{1,6}\s.*|\*\*[^*\n]+\*\*/.source,/\[[^\]\n]+\]\([^)\n]+\)/.source,'gm')};RX.json=RX.js;
+const EX={js:'js',mjs:'js',ts:'js',jsx:'js',tsx:'js',json:'json',html:'html',htm:'html',xml:'html',svg:'html',css:'css',py:'py',sh:'sh',bash:'sh',md:'md'},LN={js:'JavaScript',json:'JSON',html:'HTML',css:'CSS',py:'Python',sh:'Shell',md:'Markdown'};
+function hl(s,l){const R=RX[l];if(!R)return esc(s);R.lastIndex=0;let o='',i=0,m;while((m=R.exec(s))){if(!m[0]){R.lastIndex++;continue}o+=esc(s.slice(i,m.index))+'<i class="'+(m[1]?'c':m[2]?'s':m[3]?'n':m[4]?'k':'f')+'">'+esc(m[0])+'</i>';i=R.lastIndex}return o+esc(s.slice(i))}
+
+function code(body,w,arg){let root='/home/user/Projects',tabs=[],cur=null,sel=root,fq='',u=null;const exp=new Set([root]);
+const lang=p=>EX[(p.split('.').pop()||'').toLowerCase()]||'',ib=(g,l,f)=>h('button',{'aria-label':l,title:l,onclick:f},g);
+const ta=h('textarea',{class:'ta',spellcheck:'false',autocapitalize:'off',autocomplete:'off',autocorrect:'off','aria-label':'Code editor'}),pre=h('pre',{class:'hl','aria-hidden':'true'}),gt=h('div',{class:'gt','aria-hidden':'true'}),tbar=h('div',{class:'tbs'}),tree=h('div',{class:'tr'}),sl=h('span'),sr=h('span'),fr=h('iframe',{sandbox:'allow-scripts',title:'Preview'}),
+pv=h('div',{class:'pv',hidden:''},h('div',{class:'bar'},h('b',{style:'flex:1'},'Preview'),ib('✕',t('close'),()=>{pv.hidden=true})),fr),tp=h('div',{class:'tp',hidden:''}),
+sb=h('div',{class:'sb'},h('div',{class:'bar'},ib('📄+',t('newf'),()=>mkn(0)),ib('📁+',t('newd'),()=>mkn(1)),ib('⟳',t('rf'),()=>draw())),tree),
+app=h('div',{class:'cd',tabindex:'-1'},h('div',{class:'cm'},h('div',{class:'ab'},ib('📄',t('expl'),()=>{sb.hidden=!sb.hidden}),ib('▶',t('run'),()=>run()),ib('⌨',REG.term.n[cfg.lang],()=>tt()),ib('⋯',t('cmd'),()=>palette('>'))),sb,h('div',{class:'ma'},tbar,h('div',{class:'ed2'},gt,h('div',{class:'stk'},pre,ta)),pv)),tp,h('div',{class:'st'},sl,sr));
+const ins=s=>{ta.setRangeText(s,ta.selectionStart,ta.selectionEnd,'end');ta.dispatchEvent(new Event('input'))},sync=()=>{pre.scrollTop=gt.scrollTop=ta.scrollTop;pre.scrollLeft=ta.scrollLeft};
+const page=p=>{const dir=V.up(p),rf=f=>{const e=V.get(f[0]==='/'?f:dir+'/'+f);return e&&typeof e.v==='string'?e.v:''};return V.get(p).v.replace(/<link[^>]*href=["']([^"']+\.css)["'][^>]*>/gi,(m,f)=>'<style>'+rf(f)+'</style>').replace(/<script([^>]*?)\ssrc=["']([^"']+)["']([^>]*)><\/script>/gi,(m,a,f)=>'<script>'+rf(f).replace(/<\/script/gi,'<\\/script')+'<\/script>')};
+function paint(){const x=tabs[cur],v=ta.value;pre.innerHTML=(x?(v.length<2e5?hl(v,lang(x.p)):esc(v)):'<i class="c">'+esc(t('cwel'))+'</i>')+'\n ';gt.textContent=x?Array.from({length:(v.match(/\n/g)||[]).length+1},(_,i)=>i+1).join('\n'):''}
+function stat(){const x=tabs[cur];if(!x){sr.textContent='';return}const n=ta.value.slice(0,ta.selectionStart).split('\n');sr.textContent='Ln '+n.length+', Col '+(n.pop().length+1)+'   Spaces: 2   UTF-8   '+(LN[lang(x.p)]||'Plain Text')}
+function bar(){tbar.replaceChildren(...tabs.map((x,i)=>h('div',{class:'tab'+(i===cur?' on':''),onclick:()=>go(i)},h('span',{},V.nm(x.p)),h('button',{class:'tx','aria-label':t('close'),onclick:e=>{e.stopPropagation();closeTab(i)}},x.v!==x.s?'●':'✕'))));sl.textContent='⎇ '+(V.nm(root)||'/')}
+function go(i){cur=i;const x=tabs[i];ta.value=x?x.v:'';ta.disabled=!x;pv.hidden=true;paint();bar();stat();sync();if(x&&!matchMedia('(pointer:coarse)').matches)ta.focus()}
+async function openF(p){const e=V.get(p);if(!e||e.d)return;if(typeof e.v!=='string')return note(t('bin'),'err');let i=tabs.findIndex(x=>x.p===p);if(i<0){tabs.push({p,v:e.v,s:e.v});i=tabs.length-1}go(i);if(!sb.hidden&&app.clientWidth<600)sb.hidden=true}
+async function closeTab(i){const x=tabs[i];if(x.v!==x.s&&!await ask(t('discard')))return;tabs.splice(i,1);go(tabs.length?Math.min(i,tabs.length-1):null)}
+async function save(){const x=tabs[cur];if(!x)return;try{await V.write(x.p,x.v);x.s=x.v;bar();note(t('saved'),'ok');draw()}catch(e){note(e.message,'err')}}
+function draw(){tree.replaceChildren(h('h4',{},root));const walk=(p,d)=>V.ls(p).forEach(e=>{tree.append(h('button',{class:'tn'+(e.p===sel?' on':''),style:'padding-left:'+(10+d*12)+'px',onclick:()=>{sel=e.p;if(e.d){exp.has(e.p)?exp.delete(e.p):exp.add(e.p);draw()}else{draw();openF(e.p)}}},(e.d?(exp.has(e.p)?'▾ 📁 ':'▸ 📁 '):'   📄 ')+e.n));if(e.d&&exp.has(e.p))walk(e.p,d+1)});walk(root,0)}
+async function mkn(d){const base=V.isDir(sel)?sel:V.up(sel),n=await ask(t(d?'newd':'newf'),{in:1,val:d?'folder':'untitled.js'});if(!n)return;try{const p=base+'/'+n.trim();if(/[\\\0]/.test(n)||V.get(p))throw Error(n+': '+t('exists'));d?await V.mkdir(p):await V.write(p,'');exp.add(base);draw();if(!d)openF(p)}catch(e){note(e.message,'err')}}
+async function find(){const q=await ask(t('find'),{in:1,val:fq});if(!q)return;fq=q;const v=ta.value;let i=v.indexOf(q,ta.selectionEnd);if(i<0)i=v.indexOf(q);if(i<0)return note(t('nf'),'err');ta.focus();ta.setSelectionRange(i,i+q.length);ta.scrollTop=Math.max(0,(v.slice(0,i).split('\n').length-3)*20);sync()}
+async function repl(){const q=await ask(t('find'),{in:1,val:fq});if(!q)return;const r=await ask(t('repl'),{in:1,val:''});if(r==null)return;fq=q;ta.value=ta.value.split(q).join(r);ta.dispatchEvent(new Event('input'))}
+function tt(on){if(on===1||tp.hidden){tp.hidden=false;if(!u)u=termUI(tp,shell(root));u.focus()}else tp.hidden=true}
+async function run(){const x=tabs[cur];if(!x)return note(t('cwel'));if(x.v!==x.s)await save();const l=lang(x.p);if(l==='html'){fr.srcdoc=page(x.p);pv.hidden=false}else if(l==='js'){tt(1);u.exec('node "'+x.p+'"')}else note(t('norun'),'err')}
+function palette(v0){app.querySelector('.pal')?.remove();const i=h('input',{value:v0,placeholder:t('pal'),'aria-label':t('pal')}),l=h('div',{class:'pl'}),box=h('div',{class:'pal'},i,l),
+CM=[[t('save'),save],[t('close'),()=>cur!=null&&closeTab(cur)],[t('newf'),()=>mkn(0)],[t('newd'),()=>mkn(1)],[t('run'),run],[REG.term.n[cfg.lang],()=>tt()],[t('expl'),()=>{sb.hidden=!sb.hidden}],[t('find'),find],[t('repall'),repl],[t('theme'),()=>set({theme:cfg.theme==='dark'?'light':'dark'})]];
+const items=()=>{const q=i.value;return q[0]==='>'?CM.filter(c=>c[0].toLowerCase().includes(q.slice(1).trim().toLowerCase())):V.all().filter(p=>V.get(p)&&!V.get(p).d&&p.toLowerCase().includes(q.trim().toLowerCase())).sort().slice(0,40).map(p=>[V.nm(p)+'   '+p,()=>openF(p)])},
+pick=f=>{box.remove();f&&f[1]()},list=()=>l.replaceChildren(...items().map(f=>h('button',{class:'li',onclick:()=>pick(f)},f[0])));
+i.oninput=list;i.onkeydown=e=>{if(e.key==='Escape'){box.remove();ta.focus()}else if(e.key==='Enter')pick(items()[0])};app.append(box);list();i.focus()}
+async function seed(){if(V.ls('/home/user/Projects').length)return;const d='/home/user/Projects/hello/';await V.mkdir(d);
+await V.write(d+'index.html','<!DOCTYPE html>\n<html>\n<head>\n  <meta charset="utf-8">\n  <title>Hello</title>\n  <link rel="stylesheet" href="style.css">\n</head>\n<body>\n  <h1>Hello from WebLinux Code</h1>\n  <button id="b">Click me</button>\n  <p id="out"></p>\n  <script src="app.js"><\/script>\n</body>\n</html>\n');
+await V.write(d+'style.css','body {\n  font-family: sans-serif;\n  padding: 24px;\n}\nbutton {\n  padding: 8px 14px;\n}\n');
+await V.write(d+'app.js','// Run (▶) index.html to preview it, or run this file in the terminal\nconst b = document.getElementById("b");\nlet n = 0;\nif (b) {\n  b.onclick = () => {\n    document.getElementById("out").textContent = "Clicked " + (++n) + " times";\n  };\n}\nconsole.log("Hello from app.js");\n');
+await V.write(d+'README.md','# hello\n\nOpen `index.html` and press Run to preview it,\nor open `app.js` to run it in the terminal.\n')}
+ta.oninput=()=>{const x=tabs[cur];if(!x)return;const was=x.v!==x.s;x.v=ta.value;paint();if(was!==(x.v!==x.s))bar();stat()};ta.onscroll=sync;ta.onkeyup=ta.onclick=stat;
+app.onkeydown=e=>{const k=e.key,m=e.ctrlKey||e.metaKey,P=e.target===ta;
+if(m&&k==='s'){e.preventDefault();save()}else if(m&&k.toLowerCase()==='p'){e.preventDefault();palette(e.shiftKey?'>':'')}else if(k==='F1'){e.preventDefault();palette('>')}
+else if(m&&k==='b'){e.preventDefault();sb.hidden=!sb.hidden}else if(m&&k==='f'){e.preventDefault();find()}else if(m&&k==='`'){e.preventDefault();tt()}
+else if(k==='F5'||(m&&k==='Enter')){e.preventDefault();run()}else if(P&&k==='Tab'){e.preventDefault();ins('  ')}
+else if(P&&k==='Enter'){e.preventDefault();const s=ta.selectionStart,v=ta.value,l=v.slice(v.lastIndexOf('\n',s-1)+1,s),pc=v[s-1];ins('\n'+/^[ \t]*/.exec(l)[0]+(/[{\[(]/.test(pc)||(pc===':'&&lang(tabs[cur].p)==='py')?'  ':''))}};
+body.append(app);sb.hidden=desk.clientWidth<600;
+(async()=>{try{if(!arg)await seed();if(arg){root=V.isDir(arg)?arg:V.up(arg);sel=root;exp.add(root)}draw();bar();paint();if(arg&&!V.isDir(arg))openF(arg)}catch(e){note(e.message,'err')}})();
+return{open:async p=>{if(!p)return;if(V.isDir(p)){root=p;sel=p;exp.add(p);draw();bar()}else await openF(p)},refresh:()=>{draw();paint()},dirty:()=>tabs.some(x=>x.v!==x.s)}}
+
+function settings(body){const pg=h('div',{class:'pg'});body.append(pg);
+const grp=(l,...c)=>h('div',{style:'display:grid;gap:6px'},h('b',{},l),h('div',{class:'row'},...c)),sw=(c,on,fn,l)=>{const b=h('button',{class:'sw'+(on?' on':''),'aria-label':l,onclick:fn});b.style.background=c;return b};
+const sane=c=>{const o={};if(c.theme==='light'||c.theme==='dark')o.theme=c.theme;if(c.lang==='en'||c.lang==='ar')o.lang=c.lang;if(/^#[0-9a-f]{6}$/i.test(c.ac))o.ac=c.ac;if(Number.isInteger(c.wp)&&WP[c.wp])o.wp=c.wp;if(typeof c.h24==='boolean')o.h24=c.h24;if(typeof c.icons==='boolean')o.icons=c.icons;return o};
+const restore=async()=>{const s=await ask(t('rsh'),{ta:1,val:''});if(!s)return;try{const[n,k,c]=await V.restore(s);if(c&&typeof c==='object')set(sane(c));note(t('rsd',n+' / '+k))}catch{note(t('bad'))}wins.forEach(x=>x.api.refresh?.())};
+const reset=async()=>{if(await ask(t('rsq'),{ok:t('reset')}))set({...DEF,pins:[...DEF.pins]})};
+const erase=async()=>{if(await ask(t('erq'),{ok:t('erase')})){await V.clear();wins.forEach(x=>x.api.refresh?.())}};
+async function draw(){const u=await V.usage();pg.replaceChildren(
+grp(t('theme'),...['light','dark'].map(k=>h('button',{class:cfg.theme===k?'on':'',onclick:()=>set({theme:k})},t(k)))),
+grp(t('accent'),...AC.map(c=>sw(c,cfg.ac===c,()=>set({ac:c}),c))),grp(t('wall'),...WP.map((g,i)=>sw(g,cfg.wp===i,()=>set({wp:i}),t('wall')+' '+(i+1)))),
+grp(t('lang'),h('button',{class:cfg.lang==='en'?'on':'',onclick:()=>set({lang:'en'})},'English'),h('button',{class:cfg.lang==='ar'?'on':'',onclick:()=>set({lang:'ar'})},'العربية')),
+grp(t('misc'),h('button',{class:cfg.h24?'on':'',onclick:()=>set({h24:!cfg.h24})},t('h24')),h('button',{class:cfg.icons?'on':'',onclick:()=>set({icons:!cfg.icons})},t('dicons'))),
+grp(t('snd'),sndCtl()),
+grp(t('stor'),h('span',{},fmt(u.n)+(u.q&&u.q.quota?' / '+fmt(u.q.quota):'')),h('p',{},t('snote'))),
+grp(t('bk'),h('button',{onclick:()=>ask(t('bkn'),{ta:1,val:V.dump()})},t('exp')),h('button',{onclick:restore},t('rs')),h('p',{},t('bkn'))),
+grp(t('zone'),h('button',{onclick:reset},t('reset')),h('button',{onclick:erase},t('erase'))))}
+draw();return{refresh:draw}}
+
+$('#lb').append(ic({g:'🐧',c:'#3daee9'}));$('#lb').onclick=()=>popup('l',launcher,'L');$('#net').onclick=()=>popup('q',quick,'R');$('#vol').onclick=()=>popup('v',()=>h('div',{style:'display:grid;gap:8px'},sndCtl()),'R');$('#bell').onclick=()=>popup('n',notif,'R');
+addEventListener('online',netUp);addEventListener('offline',netUp);
+try{navigator.getBattery?.().then(b=>{const u=()=>bat=Math.round(b.level*100)+'%';u();b.addEventListener('levelchange',u)}).catch(()=>{})}catch{}
+(function tick(){clock();setTimeout(tick,60500-Date.now()%60000)})();
+apply();V.init().then(()=>{wins.forEach(x=>x.api.refresh?.());note(t('snote'))});
+</script></body></html>
